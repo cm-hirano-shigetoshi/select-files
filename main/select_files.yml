@@ -10,3 +10,11 @@ base_task:
     stdout:
       enter:
         - pipe: sed 's%^%{arg1}%' | tr '\n' ' '
+continue:
+    alt-enter:
+        input: bash {ymldir}/select_files.sh '{pre_content}'
+        query: ''
+        preview: head -n 10000 {pre_content}{}
+        stdout:
+          enter:
+            - pipe: sed 's%^%{pre_content}%' | tr '\n' ' '
