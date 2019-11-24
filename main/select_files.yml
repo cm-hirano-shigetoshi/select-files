@@ -6,7 +6,7 @@ base_task:
         - layout=reverse-list
         - prompt='{arg1}'
     query: '{arg3} '
-    preview: head -n 10000 {arg1}{}
+    preview: echo {arg1}{} | bash {ymldir}/preview.sh
     stdout:
       enter:
         - pipe: sed 's%^%{arg1}%' | tr '\n' ' '
@@ -14,7 +14,7 @@ continue:
     alt-enter:
         input: bash {ymldir}/select_files.sh '{pre_content}'
         query: ''
-        preview: head -n 10000 {pre_content}{}
+        preview: echo {pre_content}{} | bash {ymldir}/preview.sh
         stdout:
           enter:
             - pipe: sed 's%^%{pre_content}%' | tr '\n' ' '
