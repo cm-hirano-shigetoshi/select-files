@@ -1,0 +1,12 @@
+base_task:
+    input: bash {ymldir}/select_files.sh '{arg2}'
+    opts:
+        - multi
+        - no-sort
+        - layout=reverse-list
+        - prompt='{arg1}'
+    query: '{arg3} '
+    preview: head -n 10000 {arg1}{}
+    stdout:
+      enter:
+        - pipe: sed 's%^%{arg1}%' | tr '\n' ' '
