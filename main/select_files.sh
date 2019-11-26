@@ -18,6 +18,6 @@ function files() {
     | grep -v '^\s*$'
 }
 
-direstories "$1"
+direstories "$1" && true
 files "$1"
 
