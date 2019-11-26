@@ -1,8 +1,15 @@
 #!/usr/bin/env bash
 set -eu
 
+function parent_dir() {
+  prefix="$1"
+  if [[ "$prefix" = "." ]]; then
+    prefix=""
+  fi
+  echo "${prefix}../"
+}
+
 function direstories() {
-  echo '../'
   find "$1" -type d 2>/dev/null \
     | grep -vxF "$1" \
     | sed 's%//\+%/%g' \
@@ -18,6 +25,7 @@ function files() {
     | grep -v '^\s*$'
 }
 
+parent_dir "$1" && true
 direstories "$1" && true
 files "$1"
 
