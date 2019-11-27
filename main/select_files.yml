@@ -5,7 +5,7 @@ base_task:
         - multi
         - no-sort
         - layout=reverse-list
-        - prompt='{arg1}'
+        - header="$(readlink -e {arg2})"
     query: '{arg3} '
     preview: echo {} | bash {ymldir}/preview.sh
     output:
@@ -17,6 +17,8 @@ switch_task:
     alt-enter:
         input: bash {ymldir}/select_files.sh '{pre_content}'
         transform: perl {ymldir}/relative_path.pl '{pre_content}'
+        opts:
+          - header="$(readlink -e {pre_content})"
         preview: echo {} | bash {ymldir}/preview.sh
         query: ''
         output:
