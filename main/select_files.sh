@@ -2,7 +2,11 @@
 set -eu
 
 function parent_dir() {
-  echo "$1/../"
+  if [[ "$1" = "/" ]]; then
+    echo "/"
+  else
+    echo "$1/../"
+  fi
 }
 
 function direstories() {

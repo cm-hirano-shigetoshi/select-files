@@ -7,7 +7,7 @@ base_task:
         - multi
         - no-sort
         - reverse
-        - header="$(readlink -e {var2})"
+        - header="$(readlink -e {var2} | grep -vx '/')/"
     query: '{arg3} '
     preview: echo {} | bash {ymldir}/preview.sh
     output:
