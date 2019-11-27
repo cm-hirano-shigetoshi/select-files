@@ -2,11 +2,7 @@
 set -eu
 
 function parent_dir() {
-  prefix="$1"
-  if [[ "$prefix" = "." ]]; then
-    prefix=""
-  fi
-  echo "${prefix}../"
+  echo "$1/../"
 }
 
 function direstories() {
@@ -30,7 +26,6 @@ if [[ $# > 1 ]] && [[ $2 = "-d" ]]; then
   direstories "$1" && true
   files "$1"
 else
-  parent_dir "$1" && true
   files "$1"
 fi
 

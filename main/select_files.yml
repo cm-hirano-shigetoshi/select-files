@@ -1,11 +1,13 @@
 base_task:
-    input: bash {ymldir}/select_files.sh '{arg2}'
-    transform: perl {ymldir}/relative_path.pl '{arg2}'
+    vars:
+      - var2: '$(readlink -e {arg2})'
+    input: bash {ymldir}/select_files.sh "{var2}" {var4}
+    transform: perl {ymldir}/relative_path.pl "{var2}"
     opts:
         - multi
         - no-sort
-        - layout=reverse-list
-        - header="$(readlink -e {arg2})"
+        - reverse
+        - header="$(readlink -e {var2})"
     query: '{arg3} '
     preview: echo {} | bash {ymldir}/preview.sh
     output:
@@ -13,14 +15,11 @@ base_task:
         - pipe: tr '\n' ' '
 switch_task:
     ctrl-d:
-        input: bash {ymldir}/select_files.sh '{arg2}' -d
+      vars:
+        - var4: '{var4|-d|}'
+    alt-u:
+      vars:
+        - var2: $(readlink -e {var2}/..)
     alt-enter:
-        input: bash {ymldir}/select_files.sh '{pre_content}'
-        transform: perl {ymldir}/relative_path.pl '{pre_content}'
-        opts:
-          - header="$(readlink -e {pre_content})"
-        preview: echo {} | bash {ymldir}/preview.sh
-        query: ''
-        output:
-          enter:
-            - pipe: tr '\n' ' '
+      vars:
+        - var2: $(readlink -e {pre_content})
