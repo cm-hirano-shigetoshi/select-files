@@ -12,6 +12,8 @@ base_task:
       enter:
         - pipe: tr '\n' ' '
 switch_task:
+    ctrl-d:
+        input: bash {ymldir}/select_files.sh '{arg2}' -d
     alt-enter:
         input: bash {ymldir}/select_files.sh '{pre_content}'
         transform: perl {ymldir}/relative_path.pl '{pre_content}'

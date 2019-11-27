@@ -10,7 +10,7 @@ function parent_dir() {
 }
 
 function direstories() {
-  find "$1" -type d 2>/dev/null \
+  find "$1" -maxdepth 1 -type d 2>/dev/null \
     | grep -vxF "$1" \
     | sed 's%//\+%/%g' \
     | sed 's%$%/%' \
@@ -25,7 +25,12 @@ function files() {
     | grep -v '^\s*$'
 }
 
-parent_dir "$1" && true
-direstories "$1" && true
-files "$1"
+if [[ $# > 1 ]] && [[ $2 = "-d" ]]; then
+  parent_dir "$1" && true
+  direstories "$1" && true
+  files "$1"
+else
+  parent_dir "$1" && true
+  files "$1"
+fi
 
