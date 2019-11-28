@@ -12,7 +12,7 @@ base_task:
     preview: echo {} | bash {ymldir}/preview.sh
     output:
       enter:
-        - pipe: tr '\n' ' '
+        - pipe: perl {ymldir}/relative_path.pl "$(pwd)" | tr '\n' ' '
 switch_task:
     ctrl-d:
       vars:
