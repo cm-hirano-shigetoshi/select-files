@@ -3,7 +3,7 @@ base_task:
       - var2: '$(readlink -e {arg2})'
       - var5: '-r'
     input: bash {ymldir}/select_files.sh "{var2}" {var4} {var6}
-    transform: perl {ymldir}/relative_path.pl "{var2}"
+    transform: python {ymldir}/norm_path.py -a | perl {ymldir}/relative_path.pl "{var2}"
     opts:
         - multi
         - no-sort
@@ -13,9 +13,7 @@ base_task:
     preview: echo {} | bash {ymldir}/preview.sh
     output:
       enter:
-        - pipe: perl {ymldir}/relative_path.pl "$(pwd)"
-                  | python {ymldir}/norm_path.py {var5}
-                  | tr '\n' ' '
+        - pipe: python {ymldir}/norm_path.py {var5} | tr '\n' ' '
 switch_task:
     ctrl-d:
       vars:
@@ -23,6 +21,10 @@ switch_task:
     ctrl-h:
       vars:
         - var6: '{var6|-h|}'
+    ctrl-g:
+      vars:
+        - var2: $(git rev-parse --show-toplevel 2>/dev/null || echo "{var2}")
+        - var5: '-r'
     alt-u:
       vars:
         - var2: $(readlink -e {var2}/..)
@@ -30,7 +32,8 @@ switch_task:
       vars:
         - var2: $(readlink -e {pre_content})
     alt-j:
+      query: ''
       vars:
         - var2: "{pre_query}"
-        - var5: '-a'
+        - var5: -a
 
