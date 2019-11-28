@@ -3,7 +3,7 @@ base_task:
       - var2: '$(readlink -e {arg2})'
       - var5: '-r'
     input: bash {ymldir}/select_files.sh "{var2}" {var4} {var6}
-    transform: python {ymldir}/norm_path.py -a | perl {ymldir}/relative_path.pl "{var2}"
+    transform: perl {ymldir}/relative_path.pl "{var2}"
     opts:
         - multi
         - no-sort

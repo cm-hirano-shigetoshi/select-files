@@ -12,9 +12,9 @@ while (<STDIN>) {
         next;
     }
     if (/^$prefix(.*)$/) {
-        print($1 . "\n");
-    } else {
-        print $_ . "\n";
+        $_ = $1 . "\n";
     }
+    s%^\./%%;
+    print;
 }
 
