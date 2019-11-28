@@ -32,17 +32,14 @@ function direstories() {
 }
 
 function files() {
+  options=""
   if $show_hidden; then
-    pt -g ^ "$1" -U --hidden 2>/dev/null \
-      | sed 's%//\+%/%g' \
-      | sed 's%^\./%%' \
-      | grep -v '^\s*$'
-  else
-    pt -g ^ "$1" 2>/dev/null \
-      | sed 's%//\+%/%g' \
-      | sed 's%^\./%%' \
-      | grep -v '^\s*$'
+    options="-U --hidden"
   fi
+  pt -g ^ "${1}/." $options 2>/dev/null \
+    | sed 's%//\+%/%g' \
+    | sed 's%^\./%%' \
+    | grep -v '^\s*$'
 }
 
 if $show_dir; then
