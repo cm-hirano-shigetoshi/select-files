@@ -2,7 +2,7 @@ base_task:
     vars:
       - var2: '$(readlink -e {arg2})'
       - var5: '-r'
-    input: bash {ymldir}/select_files.sh "{var2}" {var4}
+    input: bash {ymldir}/select_files.sh "{var2}" {var4} {var6}
     transform: perl {ymldir}/relative_path.pl "{var2}"
     opts:
         - multi
@@ -20,6 +20,9 @@ switch_task:
     ctrl-d:
       vars:
         - var4: '{var4|-d|}'
+    ctrl-h:
+      vars:
+        - var6: '{var6|-h|}'
     alt-u:
       vars:
         - var2: $(readlink -e {var2}/..)
