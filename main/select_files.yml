@@ -1,18 +1,21 @@
 base_task:
     vars:
       - var2: '$(readlink -e {arg2})'
+      - var5: '-r'
     input: bash {ymldir}/select_files.sh "{var2}" {var4}
     transform: perl {ymldir}/relative_path.pl "{var2}"
     opts:
         - multi
         - no-sort
         - reverse
-        - header="$(readlink -e {var2} | grep -vx '/')/"
-    query: '{arg3} '
+        - header="$(echo {var2} | python {ymldir}/norm_path.py -a -t -d)"
+    query: '$(echo "{arg3} " | grep -v "^\s*$")'
     preview: echo {} | bash {ymldir}/preview.sh
     output:
       enter:
-        - pipe: perl {ymldir}/relative_path.pl "$(pwd)" | tr '\n' ' '
+        - pipe: perl {ymldir}/relative_path.pl "$(pwd)"
+                  | python {ymldir}/norm_path.py {var5}
+                  | tr '\n' ' '
 switch_task:
     ctrl-d:
       vars:
@@ -23,3 +26,8 @@ switch_task:
     alt-enter:
       vars:
         - var2: $(readlink -e {pre_content})
+    alt-j:
+      vars:
+        - var2: "{pre_query}"
+        - var5: '-a'
+
