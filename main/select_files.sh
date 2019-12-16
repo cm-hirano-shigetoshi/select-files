@@ -36,7 +36,7 @@ function files() {
   if $show_hidden; then
     options="-U --hidden"
   fi
-  pt -g ^ "${1}/." $options 2>/dev/null \
+  pt -U --home-ptignore -g ^ "${1}/." $options 2>/dev/null \
     | sed 's%//\+%/%g' \
     | sed 's%^\./%%' \
     | grep -v '^\s*$'
