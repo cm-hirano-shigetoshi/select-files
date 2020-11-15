@@ -1,39 +1,21 @@
+variables:
+    origin_path: '$(readlink -e {{arg2}})'
+    relative: '.'
 base_task:
-    vars:
-      - var2: '$(readlink -e {arg2})'
-      - var5: '-r'
-    input: bash {ymldir}/select_files.sh "{var2}" {var4} {var6}
-    transform: perl {ymldir}/relative_path.pl "{var2}"
-    opts:
+    source: bash {{yml_dir}}/select_files.sh "{{origin_path}}" {var4} {var6}
+    source_transform: perl {{yml_dir}}/relative_path.pl "{{origin_path}}"
+    options:
         - multi
         - no-sort
         - reverse
-        - header="$(echo {var2} | python {ymldir}/norm_path.py -a -t -d)"
-    query: '$(echo "{arg3} " | grep -v "^\s*$")'
-    preview: echo {} | bash {ymldir}/preview.sh
-    output:
-      enter:
-        - pipe: python {ymldir}/norm_path.py {var5} | tr '\n' ' '
-switch_task:
-    ctrl-d:
-      vars:
-        - var4: '{var4|-d|}'
-    ctrl-h:
-      vars:
-        - var6: '{var6|-h|}'
-    ctrl-g:
-      vars:
-        - var2: $(git rev-parse --show-toplevel 2>/dev/null || echo "{var2}")
-        - var5: '-r'
+        - header="$(echo {{origin_path}} | python {{yml_dir}}/norm_path.py -a -t -d)"
+        - preview='echo "{{relative}}/{}" | python {{tool_dir}}/main/invisible_test.py erase | bash {{yml_dir}}/preview.sh'
+    post_operations:
+        enter:
+            - pipe: python {{yml_dir}}/norm_path.py -r | tr '\n' ' '
+            - join
+task_switch:
     alt-u:
-      vars:
-        - var2: $(readlink -e {var2}/..)
-    alt-enter:
-      vars:
-        - var2: $(readlink -e {pre_content})
-    alt-j:
-      query: ''
-      vars:
-        - var2: "{pre_query}"
-        - var5: -a
-
+        variables:
+            origin_path: $(readlink -e {{origin_path}}/..)
+            relative: "../{{relative}}"
