@@ -19,7 +19,7 @@ function select_files() {
     query="$(basename "${dir}")"
     dir="$(dirname "${dir}")"
   fi
-  out=$(fzfyml run ${SELECT_FILES_TOOL_DIR}/main/select_files.yml "${center}" "${dir}" "${query}")
+  out=$(fzfyml3 run ${SELECT_FILES_TOOL_DIR}/main/select_files.yml "${center}" "${dir}" "${query}")
   if [[ -n "$out" ]]; then
     BUFFER="${left}${out}${right}"
     CURSOR=$((${#BUFFER} - ${#right}))
