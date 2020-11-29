@@ -1,6 +1,6 @@
-variables:
-    origin_path: '$(readlink -e {{arg2}})'
 base_task:
+    variables:
+        origin_path: '$(readlink -e {{arg2}})'
     source: bash {{yml_dir}}/select_files.sh "{{origin_path}}"
     source_transform: perl {{yml_dir}}/relative_path.pl "{{origin_path}}"
     options:
