@@ -1,21 +1,18 @@
-variables:
-    origin_path: '$(readlink -e {{arg2}})'
-    relative: '.'
 base_task:
-    source: bash {{yml_dir}}/select_files.sh "{{origin_path}}" {var4} {var6}
+    variables:
+        origin_path: '$(readlink -e {{arg2}})'
+    source: bash {{yml_dir}}/select_files.sh "{{origin_path}}"
     source_transform: perl {{yml_dir}}/relative_path.pl "{{origin_path}}"
     options:
         - multi
-        - no-sort
         - reverse
         - header="$(echo {{origin_path}} | python {{yml_dir}}/norm_path.py -a -t -d)"
-        - preview='echo "{{relative}}/{}" | python {{tool_dir}}/main/invisible_test.py erase | bash {{yml_dir}}/preview.sh'
+        - preview='echo "{..}" | bash {{yml_dir}}/preview.sh'
     post_operations:
         enter:
-            - pipe: python {{yml_dir}}/norm_path.py -r | tr '\n' ' '
+            - pipe: python {{yml_dir}}/norm_path.py -r
             - join
 task_switch:
     alt-u:
         variables:
             origin_path: $(readlink -e {{origin_path}}/..)
-            relative: "../{{relative}}"
