@@ -2,7 +2,7 @@ SELECT_FILES_TOOL_DIR=${SELECT_FILES_TOOL_DIR-${0:A:h}}
 
 function select_files() {
   local strings left center right dir query
-  strings=$(${SELECT_FILES_TOOL_DIR}/bin/range $CURSOR "$BUFFER")
+  strings=$(python ${SELECT_FILES_TOOL_DIR}/main/range.py $CURSOR "$BUFFER")
   left=$(sed -z -n '1p' <<< "${strings}" | sed 's/\x0//')
   center=$(sed -z -n '2p' <<< "${strings}" | sed 's/\x0//')
   right=$(sed -z -n '3p' <<< "${strings}" | sed 's/\x0//')
