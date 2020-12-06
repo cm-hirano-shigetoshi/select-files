@@ -1,7 +1,7 @@
 base_task:
     variables:
         origin_path: '{{arg1}}'
-    source: pt -g ^ {{origin_path}} | sed 's%^\./%%'
+    source: pt -g ^ {{origin_path}} | sed -e 's%^\./%%' -e 's%^//%/%'
     options:
         - multi
         - reverse
