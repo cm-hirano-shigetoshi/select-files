@@ -1,18 +1,25 @@
 base_task:
     variables:
-        origin_path: '$(readlink -e {{arg2}})'
-    source: bash {{yml_dir}}/select_files.sh "{{origin_path}}"
-    source_transform: perl {{yml_dir}}/relative_path.pl "{{origin_path}}"
+        origin_path: '{{arg1}}'
+    source: pt -g ^ {{origin_path}} | sed 's%^\./%%'
     options:
         - multi
         - reverse
-        - header="$(echo {{origin_path}} | python {{yml_dir}}/norm_path.py -a -t -d)"
-        - preview='echo "{..}" | bash {{yml_dir}}/preview.sh'
+        - select-1
+        - header='$(readlink -e {{origin_path}})'
+        - query={{arg2}}
+        - preview='cat {}'
     post_operations:
         enter:
-            - pipe: python {{yml_dir}}/norm_path.py -r
             - join
 task_switch:
+    alt-a:
+        source: find {{origin_path}}
+    alt-h:
+        source: find {{origin_path}} -type f
+    alt-d:
+        source: find {{origin_path}} -type d
     alt-u:
         variables:
-            origin_path: $(readlink -e {{origin_path}}/..)
+            origin_path: '{{origin_path}}/..'
+
