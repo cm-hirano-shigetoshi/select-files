@@ -13,6 +13,8 @@ base_task:
         enter:
             - join
 task_switch:
+    alt-f:
+        source: pt -g ^ {{origin_path}} | sed -e 's%^\./%%' -e 's%^//%/%'
     alt-a:
         source: find {{origin_path}}
     alt-h:
