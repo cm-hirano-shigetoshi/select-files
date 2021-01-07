@@ -1,26 +1,27 @@
 base_task:
     variables:
         origin_path: '{{arg1}}'
-    source: pt -g ^ {{origin_path}} | sed -e 's%^\./%%' -e 's%^//%/%'
+    source: pt -g ^ {{origin_path}} 2>/dev/null
+    source_transform: sed 's%^{{origin_path}}/%%' | python {{tool_dir}}/main/path.py -p relative
     options:
         - multi
         - reverse
-        - select-1
         - header='$(readlink -e {{origin_path}})'
         - query={{arg2}}
         - preview='cat {}'
     post_operations:
         enter:
+            - pipe: python {{tool_dir}}/main/path.py
             - join
 task_switch:
     alt-f:
-        source: pt -g ^ {{origin_path}} | sed -e 's%^\./%%' -e 's%^//%/%'
+        source: pt -g ^ {{origin_path}} 2>/dev/null
     alt-a:
-        source: find {{origin_path}}
+        source: find {{origin_path}} 2>/dev/null
     alt-h:
-        source: find {{origin_path}} -type f
+        source: find {{origin_path}} -type f 2>/dev/null
     alt-d:
-        source: find {{origin_path}} -type d
+        source: find {{origin_path}} -type d 2>/dev/null
     alt-u:
         variables:
             origin_path: '{{origin_path}}/..'
