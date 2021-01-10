@@ -36,3 +36,12 @@ task_switch:
     alt-u:
         variables:
             origin_path: '{{origin_path}}/..'
+    alt-j:
+        variables:
+            origin_path: '{{output}}'
+    alt-enter:
+        variables:
+            origin_path: '{{query}}'
+        options:
+            - query=''
+
