@@ -1,7 +1,7 @@
 SELECT_FILES_TOOL_DIR=${SELECT_FILES_TOOL_DIR-${0:A:h}}
 
 function select_files() {
-  strings=$(python ${SELECT_FILES_TOOL_DIR}/main/range.py "$BUFFER" $CURSOR)
+  strings=$(python3 ${SELECT_FILES_TOOL_DIR}/main/range.py "$BUFFER" $CURSOR)
   left=$(sed -n '1p' <<< "${strings}")
   center=$(sed -n '2p' <<< "${strings}")
   right=$(sed -n '3p' <<< "${strings}")
