@@ -9,6 +9,7 @@ base_task:
         - header='$(echo {{origin_path}} | python3 {{tool_dir}}/main/path.py -p absolute -t -s)'
         - query={{arg2}}
         - preview='bash {{tool_dir}}/main/preview_file.sh {}'
+        - preview-window='up'
     post_operations:
         enter:
             - pipe: python3 {{tool_dir}}/main/path.py
