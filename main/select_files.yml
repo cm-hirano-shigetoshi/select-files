@@ -8,7 +8,7 @@ base_task:
         - reverse
         - header='$(echo {{origin_path}} | python3 {{tool_dir}}/main/path.py -p absolute -t -s)'
         - query={{arg2}}
-        - preview='bash {{tool_dir}}/main/preview_file.sh {}'
+        - preview='bash {{tool_dir}}/main/preview_file.sh {} | ccat --bg=dark --color=always'
         - preview-window='up'
     post_operations:
         enter:
