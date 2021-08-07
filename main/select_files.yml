@@ -1,18 +1,48 @@
 base_task:
     variables:
-        origin_path: '$(readlink -e {{arg2}})'
-    source: bash {{yml_dir}}/select_files.sh "{{origin_path}}"
-    source_transform: perl {{yml_dir}}/relative_path.pl "{{origin_path}}"
+        origin_path: '{{arg1}}'
+    source: pt -g ^ {{origin_path}} 2>/dev/null
+    source_transform: sed 's%^{{origin_path}}/%%' | python3 {{tool_dir}}/main/path.py -p relative
     options:
         - multi
         - reverse
-        - header="$(echo {{origin_path}} | python {{yml_dir}}/norm_path.py -a -t -d)"
-        - preview='echo "{..}" | bash {{yml_dir}}/preview.sh'
+        - header='$(echo {{origin_path}} | python3 {{tool_dir}}/main/path.py -p absolute -t -s)'
+        - query={{arg2}}
+        - preview='bash {{tool_dir}}/main/preview_file.sh {} | ccat --bg=dark --color=always'
+        - preview-window='up'
     post_operations:
         enter:
-            - pipe: python {{yml_dir}}/norm_path.py -r
+            - pipe: python3 {{tool_dir}}/main/path.py
             - join
 task_switch:
+    alt-f:
+        source: pt -g ^ {{origin_path}} 2>/dev/null
+        source_transform: sed 's%^{{origin_path}}/%%' | python3 {{tool_dir}}/main/path.py -p relative
+    alt-a:
+        source: find {{origin_path}} 2>/dev/null
+        source_transform: sed 's%^{{origin_path}}/%%' | python3 {{tool_dir}}/main/path.py -p relative
+    alt-h:
+        source: find {{origin_path}} -type f 2>/dev/null
+        source_transform: sed 's%^{{origin_path}}/%%' | python3 {{tool_dir}}/main/path.py -p relative
+    alt-d:
+        source: find {{origin_path}} -type d 2>/dev/null
+        source_transform: sed 's%^{{origin_path}}/%%' | python3 {{tool_dir}}/main/path.py -p relative
+    alt-l:
+        source: ls -1 {{origin_path}} 2>/dev/null | sed 's%^%{{origin_path}}/%'
+        source_transform: ls -l --color=always {{origin_path}} 2>/dev/null | sed 1d
+        post_operations:
+            enter:
+                - pipe: python3 {{tool_dir}}/main/path.py
+                - join
     alt-u:
         variables:
-            origin_path: $(readlink -e {{origin_path}}/..)
+            origin_path: '{{origin_path}}/..'
+    alt-j:
+        variables:
+            origin_path: '{{output}}'
+    alt-enter:
+        variables:
+            origin_path: '{{query}}'
+        options:
+            - query=''
+
