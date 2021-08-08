@@ -2,37 +2,38 @@ base_task:
     variables:
         origin_path: '{{arg1}}'
     source: pt -g ^ {{origin_path}} 2>/dev/null
-    source_transform: sed 's%^{{origin_path}}/%%' | python3 {{tool_dir}}/main/path.py -p relative
+    source_transform: fzfyml4 path-tool -p relative
+    preview:
+        command: 'bash {{yml_dir}}/preview_file.sh {} | ccat --bg=dark --color=always'
+        window: up
     options:
         - multi
         - reverse
-        - header='$(echo {{origin_path}} | python3 {{tool_dir}}/main/path.py -p absolute -t -s)'
+        - header=$(echo {{origin_path}} | fzfyml4 path-tool -p absolute --tilde_home --slash)
         - query={{arg2}}
-        - preview='bash {{tool_dir}}/main/preview_file.sh {} | ccat --bg=dark --color=always'
-        - preview-window='up'
     post_operations:
         enter:
-            - pipe: python3 {{tool_dir}}/main/path.py
+            - pipe: fzfyml4 path-tool
             - join
 task_switch:
     alt-f:
         source: pt -g ^ {{origin_path}} 2>/dev/null
-        source_transform: sed 's%^{{origin_path}}/%%' | python3 {{tool_dir}}/main/path.py -p relative
+        source_transform: fzfyml4 path-tool -p relative
     alt-a:
         source: find {{origin_path}} 2>/dev/null
-        source_transform: sed 's%^{{origin_path}}/%%' | python3 {{tool_dir}}/main/path.py -p relative
+        source_transform: fzfyml4 path-tool -p relative
     alt-h:
         source: find {{origin_path}} -type f 2>/dev/null
-        source_transform: sed 's%^{{origin_path}}/%%' | python3 {{tool_dir}}/main/path.py -p relative
+        source_transform: fzfyml4 path-tool -p relative
     alt-d:
         source: find {{origin_path}} -type d 2>/dev/null
-        source_transform: sed 's%^{{origin_path}}/%%' | python3 {{tool_dir}}/main/path.py -p relative
+        source_transform: fzfyml4 path-tool -p relative
     alt-l:
-        source: ls -1 {{origin_path}} 2>/dev/null | sed 's%^%{{origin_path}}/%'
+        source: ls -1 {{origin_path}} 2>/dev/null
         source_transform: ls -l --color=always {{origin_path}} 2>/dev/null | sed 1d
         post_operations:
             enter:
-                - pipe: python3 {{tool_dir}}/main/path.py
+                - pipe: fzfyml4 path-tool
                 - join
     alt-u:
         variables:
